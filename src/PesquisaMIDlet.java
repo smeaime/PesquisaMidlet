@@ -18,17 +18,20 @@ public class PesquisaMIDlet extends MIDlet implements CommandListener {
     
     private boolean midletPaused = false;
     
+    /**
+     * Essa variável irá simular um banco de dados em memória, contendo todos os "questionários" que foram respondidos
+     */ 
     private Vector db = new Vector();
 
 //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-private List Principal;
-private Form InserirDados;
-private ChoiceGroup Sexo;
+private List Principal;     // O menu principal do sistema
+private Form InserirDados;  // Formulário de inserção de dados, o questionário da pesquisa
+private ChoiceGroup Sexo;   
 private DateField dateField;
 private TextField textField;
-private Form VisualizarDados;
+private Form VisualizarDados;   // Formulário de visualização dos dados que foram inseridos
 private TableItem tableItem;
-private Form ExportarDados;
+private Form ExportarDados;     // Formulário para exportação dos dados para XML
 private Command exitCommand;
 private Command Salvar;
 private Command itemCommand;
@@ -371,6 +374,9 @@ return simpleTableModel;
 }
 //</editor-fold>//GEN-END:|46-getter|2|
 
+/**
+ * Gera o tableModel para exibição dos dados já cadastrados
+ */ 
 private void updateTableModel() {
     Enumeration it = db.elements();
     int row = 0;
@@ -385,8 +391,10 @@ private void updateTableModel() {
     simpleTableModel.setValues(values);
 }
 
+/**
+ * Salva os dados preenchidos no formulário
+ */ 
  private void Save() {
-        // write pre-action user code here
            Hashtable element = new Hashtable();
            element.put("sexo",Integer.toString(Sexo.getSelectedIndex()));
            element.put("data",dateField.getDate());
