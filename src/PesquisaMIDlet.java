@@ -3,14 +3,24 @@
  * and open the template in the editor.
  */
 
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 import org.netbeans.microedition.lcdui.SimpleTableModel;
 import org.netbeans.microedition.lcdui.TableItem;
 
+import org.kxml2.kdom.Document;
+import org.kxml2.kdom.Element;
+import org.kxml2.io.KXmlParser;
+import org.kxml2.io.KXmlSerializer;
+import org.kxml2.kdom.Node;
+import org.netbeans.microedition.lcdui.pda.FileBrowser;
+import org.xmlpull.v1.XmlSerializer;
 /**
  * @author petronio
  */
@@ -22,26 +32,35 @@ public class PesquisaMIDlet extends MIDlet implements CommandListener {
      * Essa variável irá simular um banco de dados em memória, contendo todos os "questionários" que foram respondidos
      */ 
     private Vector db = new Vector();
+    
+    KXmlParser parser = new KXmlParser();
+    Document doc = new Document();
+    KXmlSerializer serializer = new KXmlSerializer();
+   
 
 //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-private List Principal;     // O menu principal do sistema
-private Form InserirDados;  // Formulário de inserção de dados, o questionário da pesquisa
-private ChoiceGroup Sexo;   
+private List Principal;
+private Form InserirDados;
+private ChoiceGroup Sexo;
 private DateField dateField;
 private TextField textField;
-private Form VisualizarDados;   // Formulário de visualização dos dados que foram inseridos
+private Form VisualizarDados;
 private TableItem tableItem;
-private Form ExportarDados;     // Formulário para exportação dos dados para XML
+private Form ExportarDados;
+private FileBrowser fileBrowser;
 private Command exitCommand;
 private Command Salvar;
-private Command itemCommand;
 private Command Voltar;
+private Command itemCommand;
+private Command exitCommand1;
+private Command exitCommand2;
 private SimpleTableModel simpleTableModel;
 //</editor-fold>//GEN-END:|fields|0|
     /**
      * The PesquisaMIDlet constructor.
      */
     public PesquisaMIDlet() {
+      
     }
 
    
@@ -99,7 +118,7 @@ display.setCurrent (alert, nextDisplayable);
         // write post-switch user code here
 }//GEN-BEGIN:|5-switchDisplayable|2|
 //</editor-fold>//GEN-END:|5-switchDisplayable|2|
-
+ String xml;
 //<editor-fold defaultstate="collapsed" desc=" Generated Method: commandAction for Displayables ">//GEN-BEGIN:|7-commandAction|0|7-preCommandAction
 /**
  * Called by a system to indicated that a command has been invoked on a particular displayable.
@@ -108,32 +127,48 @@ display.setCurrent (alert, nextDisplayable);
  */
 public void commandAction (Command command, Displayable displayable) {//GEN-END:|7-commandAction|0|7-preCommandAction
  // write pre-action user code here
-if (displayable == InserirDados) {//GEN-BEGIN:|7-commandAction|1|32-preAction
-if (command == Salvar) {//GEN-END:|7-commandAction|1|32-preAction
+if (displayable == ExportarDados) {//GEN-BEGIN:|7-commandAction|1|48-preAction
+if (command == exitCommand1) {//GEN-END:|7-commandAction|1|48-preAction
+ // write pre-action user code here
+//GEN-LINE:|7-commandAction|2|48-postAction
+ // write post-action user code here
+}//GEN-BEGIN:|7-commandAction|3|32-preAction
+} else if (displayable == InserirDados) {
+if (command == Salvar) {//GEN-END:|7-commandAction|3|32-preAction
                 Save();
-switchDisplayable (null, getPrincipal ());//GEN-LINE:|7-commandAction|2|32-postAction
+switchDisplayable (null, getPrincipal ());//GEN-LINE:|7-commandAction|4|32-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|3|16-preAction
+}//GEN-BEGIN:|7-commandAction|5|16-preAction
 } else if (displayable == Principal) {
-if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|3|16-preAction
+if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|5|16-preAction
  // write pre-action user code here
-PrincipalAction ();//GEN-LINE:|7-commandAction|4|16-postAction
+PrincipalAction ();//GEN-LINE:|7-commandAction|6|16-postAction
  // write post-action user code here
-} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|5|28-preAction
+} else if (command == exitCommand) {//GEN-LINE:|7-commandAction|7|28-preAction
  // write pre-action user code here
-exitMIDlet ();//GEN-LINE:|7-commandAction|6|28-postAction
+exitMIDlet ();//GEN-LINE:|7-commandAction|8|28-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|7|43-preAction
+}//GEN-BEGIN:|7-commandAction|9|43-preAction
 } else if (displayable == VisualizarDados) {
-if (command == Voltar) {//GEN-END:|7-commandAction|7|43-preAction
+if (command == Voltar) {//GEN-END:|7-commandAction|9|43-preAction
  // write pre-action user code here
-switchDisplayable (null, getPrincipal ());//GEN-LINE:|7-commandAction|8|43-postAction
+//GEN-LINE:|7-commandAction|10|43-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|9|7-postCommandAction
-}//GEN-END:|7-commandAction|9|7-postCommandAction
+}//GEN-BEGIN:|7-commandAction|11|53-preAction
+} else if (displayable == fileBrowser) {
+if (command == FileBrowser.SELECT_FILE_COMMAND) {//GEN-END:|7-commandAction|11|53-preAction
+xml = geraXML();
+//GEN-LINE:|7-commandAction|12|53-postAction
  // write post-action user code here
-}//GEN-BEGIN:|7-commandAction|10|
-//</editor-fold>//GEN-END:|7-commandAction|10|
+} else if (command == exitCommand2) {//GEN-LINE:|7-commandAction|13|57-preAction
+ // write pre-action user code here
+switchDisplayable (null, getPrincipal ());//GEN-LINE:|7-commandAction|14|57-postAction
+ // write post-action user code here
+}//GEN-BEGIN:|7-commandAction|15|7-postCommandAction
+}//GEN-END:|7-commandAction|15|7-postCommandAction
+ // write post-action user code here
+}//GEN-BEGIN:|7-commandAction|16|
+//</editor-fold>//GEN-END:|7-commandAction|16|
 
 //<editor-fold defaultstate="collapsed" desc=" Generated Getter: Principal ">//GEN-BEGIN:|14-getter|0|14-preInit
 /**
@@ -169,13 +204,13 @@ if (__selectedString.equals ("Inserir Dados")) {//GEN-END:|14-action|1|18-preAct
 switchDisplayable (null, getInserirDados ());//GEN-LINE:|14-action|2|18-postAction
 updateTableModel();
 } else if (__selectedString.equals ("Visualizar Dados")) {//GEN-LINE:|14-action|3|19-preAction
- // write pre-action user code here
+
 switchDisplayable (null, getVisualizarDados ());//GEN-LINE:|14-action|4|19-postAction
  // write post-action user code here
 } else if (__selectedString.equals ("Exportar Dados")) {//GEN-LINE:|14-action|5|20-preAction
- // write pre-action user code here
-switchDisplayable (null, getExportarDados ());//GEN-LINE:|14-action|6|20-postAction
- // write post-action user code here
+
+switchDisplayable (null, getFileBrowser ());//GEN-LINE:|14-action|6|20-postAction
+//
 }//GEN-BEGIN:|14-action|7|14-postAction
 }//GEN-END:|14-action|7|14-postAction
  // enter post-action user code here
@@ -275,7 +310,9 @@ return VisualizarDados;
 public Form getExportarDados () {
 if (ExportarDados == null) {//GEN-END:|24-getter|0|24-preInit
  // write pre-init user code here
-ExportarDados = new Form ("Exportar Dados");//GEN-LINE:|24-getter|1|24-postInit
+ExportarDados = new Form ("Exportar Dados");//GEN-BEGIN:|24-getter|1|24-postInit
+ExportarDados.addCommand (getExitCommand1 ());
+ExportarDados.setCommandListener (this);//GEN-END:|24-getter|1|24-postInit
  // write post-init user code here
 }//GEN-BEGIN:|24-getter|2|
 return ExportarDados;
@@ -374,6 +411,57 @@ return simpleTableModel;
 }
 //</editor-fold>//GEN-END:|46-getter|2|
 
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: exitCommand1 ">//GEN-BEGIN:|47-getter|0|47-preInit
+/**
+ * Returns an initiliazed instance of exitCommand1 component.
+ * @return the initialized component instance
+ */
+public Command getExitCommand1 () {
+if (exitCommand1 == null) {//GEN-END:|47-getter|0|47-preInit
+ // write pre-init user code here
+exitCommand1 = new Command ("Sair", Command.EXIT, 0);//GEN-LINE:|47-getter|1|47-postInit
+ // write post-init user code here
+}//GEN-BEGIN:|47-getter|2|
+return exitCommand1;
+}
+//</editor-fold>//GEN-END:|47-getter|2|
+
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: fileBrowser ">//GEN-BEGIN:|51-getter|0|51-preInit
+/**
+ * Returns an initiliazed instance of fileBrowser component.
+ * @return the initialized component instance
+ */
+public FileBrowser getFileBrowser () {
+if (fileBrowser == null) {//GEN-END:|51-getter|0|51-preInit
+ // write pre-init user code here
+fileBrowser = new FileBrowser (getDisplay ());//GEN-BEGIN:|51-getter|1|51-postInit
+fileBrowser.setTitle ("Exportar XML");
+fileBrowser.setCommandListener (this);
+fileBrowser.addCommand (FileBrowser.SELECT_FILE_COMMAND);
+fileBrowser.addCommand (getExitCommand2 ());//GEN-END:|51-getter|1|51-postInit
+ // write post-init user code here
+}//GEN-BEGIN:|51-getter|2|
+return fileBrowser;
+}
+//</editor-fold>//GEN-END:|51-getter|2|
+
+//<editor-fold defaultstate="collapsed" desc=" Generated Getter: exitCommand2 ">//GEN-BEGIN:|56-getter|0|56-preInit
+/**
+ * Returns an initiliazed instance of exitCommand2 component.
+ * @return the initialized component instance
+ */
+public Command getExitCommand2 () {
+if (exitCommand2 == null) {//GEN-END:|56-getter|0|56-preInit
+ // write pre-init user code here
+exitCommand2 = new Command ("Sair", Command.EXIT, 0);//GEN-LINE:|56-getter|1|56-postInit
+ // write post-init user code here
+}//GEN-BEGIN:|56-getter|2|
+return exitCommand2;
+}
+//</editor-fold>//GEN-END:|56-getter|2|
+
+
+
 /**
  * Gera o tableModel para exibição dos dados já cadastrados
  */ 
@@ -388,7 +476,7 @@ private void updateTableModel() {
         values[row][2] = obj.get("peso").toString();
         row++;
     }
-    simpleTableModel.setValues(values);
+    getSimpleTableModel().setValues(values);
 }
 
 /**
@@ -401,6 +489,43 @@ private void updateTableModel() {
            element.put("peso", textField.getString());
            db.addElement(element);
     }
+ 
+ private String geraXML() {
+     try {
+         Enumeration it = db.elements();
+        int row = 0;
+        Document doc = new Document();
+        Element raiz = doc.createElement(null, "qs");
+        while(it.hasMoreElements()){
+            Element q = raiz.createElement("qs", "q");
+            Hashtable obj = (Hashtable)it.nextElement();
+            q.setAttribute(null, "s", obj.get("sexo").toString());
+            q.setAttribute(null, "d", obj.get("data").toString());
+            q.setAttribute(null, "p", obj.get("peso").toString());
+            raiz.addChild(row, Node.ELEMENT, q);
+            row++;
+        }
+        doc.addChild(0, Node.ELEMENT, raiz);
+        XmlSerializer serializer = new KXmlSerializer();        
+        FileConnection fileConn = (FileConnection)Connector.open("file:///root1/Export.xml", Connector.READ_WRITE);
+	
+        if (fileConn.exists()) 
+            fileConn.delete();        
+        else   
+            fileConn.create();
+        
+        OutputStream stream = fileConn.openOutputStream();
+        serializer.setOutput(stream,"ascii");
+        doc.write(serializer);
+        stream.close();
+        fileConn.close();
+        return stream.toString();
+     }
+     catch(Exception ex){
+         return ex.getMessage();
+     }
+     
+ }
 
     /**
      * Returns a display instance.
