@@ -129,8 +129,13 @@
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
                     <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A1:3_R45"/>
                     <Component componentID="43" typeID="C#CommandEventSource">
+                        <Property name="eventHandler" typeID="C#EventHandler" value="R59"/>
                         <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R23"/>
                         <Property name="command" typeID="Cjavax.microedition.lcdui.Command" value="R42"/>
+                        <Component componentID="59" typeID="C#SwitchDisplayableEventHandler">
+                            <Property name="eventSource" typeID="C#EventSource" value="R43"/>
+                            <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R14"/>
+                        </Component>
                     </Component>
                     <Component componentID="45" typeID="Corg.netbeans.microedition.lcdui.TableItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VtableItem"/>
@@ -235,10 +240,10 @@
     </Document>
     <FlowScene version="1">
         <Node componentID="2" descriptorID="componentNode2" x="34" y="32"/>
-        <Node componentID="23" descriptorID="componentNode23" x="528" y="356"/>
         <Node componentID="51" descriptorID="componentNode51" x="753" y="136"/>
-        <Node componentID="21" descriptorID="componentNode21" x="519" y="25"/>
-        <Node componentID="14" descriptorID="componentNode14" x="288" y="164"/>
         <Node componentID="24" descriptorID="componentNode24" x="88" y="356"/>
+        <Node componentID="14" descriptorID="componentNode14" x="288" y="164"/>
+        <Node componentID="23" descriptorID="componentNode23" x="528" y="356"/>
+        <Node componentID="21" descriptorID="componentNode21" x="519" y="25"/>
     </FlowScene>
 </VisualDesign>

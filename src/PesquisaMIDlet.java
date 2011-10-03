@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import java.util.Calendar;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -118,7 +119,7 @@ display.setCurrent (alert, nextDisplayable);
         // write post-switch user code here
 }//GEN-BEGIN:|5-switchDisplayable|2|
 //</editor-fold>//GEN-END:|5-switchDisplayable|2|
- String xml;
+
 //<editor-fold defaultstate="collapsed" desc=" Generated Method: commandAction for Displayables ">//GEN-BEGIN:|7-commandAction|0|7-preCommandAction
 /**
  * Called by a system to indicated that a command has been invoked on a particular displayable.
@@ -152,12 +153,12 @@ exitMIDlet ();//GEN-LINE:|7-commandAction|8|28-postAction
 } else if (displayable == VisualizarDados) {
 if (command == Voltar) {//GEN-END:|7-commandAction|9|43-preAction
  // write pre-action user code here
-//GEN-LINE:|7-commandAction|10|43-postAction
+switchDisplayable (null, getPrincipal ());//GEN-LINE:|7-commandAction|10|43-postAction
  // write post-action user code here
 }//GEN-BEGIN:|7-commandAction|11|53-preAction
 } else if (displayable == fileBrowser) {
 if (command == FileBrowser.SELECT_FILE_COMMAND) {//GEN-END:|7-commandAction|11|53-preAction
-xml = geraXML();
+    geraXML();
 //GEN-LINE:|7-commandAction|12|53-postAction
  // write post-action user code here
 } else if (command == exitCommand2) {//GEN-LINE:|7-commandAction|13|57-preAction
@@ -506,7 +507,7 @@ private void updateTableModel() {
             row++;
         }
         doc.addChild(0, Node.ELEMENT, raiz);
-        XmlSerializer serializer = new KXmlSerializer();        
+        XmlSerializer serializer = new KXmlSerializer(); 
         FileConnection fileConn = (FileConnection)Connector.open("file:///root1/Export.xml", Connector.READ_WRITE);
 	
         if (fileConn.exists()) 
